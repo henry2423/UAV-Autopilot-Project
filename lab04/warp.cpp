@@ -18,16 +18,16 @@ void onMouse(int event, int x, int y, int flags, void* param) {
 
 void _warpPerspective(Mat& Input, Mat& output, Mat& _3by3matrix)
 {
-//    Mat output = Output.clone();
-//    for (int i = 0; i < output.rows; i++)
-//    {
-//        for (int j = 0; j < output.cols; j++)
-//        {
-//            output.at<Vec3b>(i, j)[0] = 0;
-//            output.at<Vec3b>(i, j)[1] = 0;
-//            output.at<Vec3b>(i, j)[2] = 0;
-//        }
-//    }
+    //    Mat output = Output.clone();
+    //    for (int i = 0; i < output.rows; i++)
+    //    {
+    //        for (int j = 0; j < output.cols; j++)
+    //        {
+    //            output.at<Vec3b>(i, j)[0] = 0;
+    //            output.at<Vec3b>(i, j)[1] = 0;
+    //            output.at<Vec3b>(i, j)[2] = 0;
+    //        }
+    //    }
     int rows = Input.rows;
     int cols = Input.cols;
     float x = 0;
@@ -52,7 +52,7 @@ void _warpPerspective(Mat& Input, Mat& output, Mat& _3by3matrix)
 }
 
 int main() {
-    VideoCapture cap(0);
+    VideoCapture cap(1);
     if (!cap.isOpened()) {
         return -1;
     }
@@ -93,7 +93,7 @@ int main() {
             img_temp.at<Vec3b>(i, j)[2] = 0;
         }
     }
-
+    
     
     Mat result(3, 3, CV_32FC1);
     result = findHomography(cap_corner, img_corner);
@@ -122,12 +122,12 @@ int main() {
     while (1) {
         cap >> frame;
         // call your warping function
+        _warpPerspective(frame, img_temp, result);
         //warpPerspective(frame, img_temp, result, img_temp.size());
         fillConvexPoly(img_out, poly, 4, Scalar::all(0), CV_AA);
-        _warpPerspective(frame, img_out, result);
-
+        img_out = img_out + img_temp;
         imshow("img", img_out);
-        if (waitKey(33) == 27) break;
+        if (waitKey(1) == 27) break;
     }
     return 0;
 }
